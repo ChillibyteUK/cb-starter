@@ -2,14 +2,8 @@
 @import "colours";
 @import "header";
 @import "footer";
-@import "buttons";
 @import "blocks/blocks";
 
-a {
-    color: var(--col-green-400);
-}
-
-a,
 a.noline {
     text-decoration: none;
 }
@@ -33,10 +27,6 @@ a.anchor {
     a:not(:last-of-type) {
         margin-right: 0.5rem;
     }
-}
-
-.fa-ul {
-    margin-inline-start: 1.5rem;
 }
 
 :not(.share-icons,.social-icons,figure,.cb,.rplg-biz-name) > a[target="_blank"]:not(.btn)::after {

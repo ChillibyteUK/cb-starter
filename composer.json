@@ -1,5 +1,5 @@
 {
-	"name": "understrap/lc-tw2023",
+	"name": "understrap/cb-starter",
 	"description": "Basic Child Starter Theme for Understrap",
 	"type": "wordpress-theme",
 	"license": "GPL-3.0",
@@ -9,11 +9,11 @@
 		"theme",
 		"bootstrap"
 	],
-	"homepage": "https://github.com/understrap/lc-tw2023",
+	"homepage": "https://github.com/understrap/cb-starter",
 	"authors": [
 		{
 			"name": "Contributors",
-			"homepage": "https://github.com/understrap/lc-tw2023/contributors.md"
+			"homepage": "https://github.com/understrap/cb-starter/contributors.md"
 		}
 	],
 	"require": {

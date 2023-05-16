@@ -2,12 +2,12 @@
 // Exit if accessed directly.
 defined('ABSPATH') || exit;
 
-require_once LC_THEME_DIR . '/inc/lc-posttypes.php';
-require_once LC_THEME_DIR . '/inc/lc-taxonomies.php';
-require_once LC_THEME_DIR . '/inc/lc-utility.php';
-require_once LC_THEME_DIR . '/inc/lc-blocks.php';
-// require_once LC_THEME_DIR . '/inc/lc-news.php';
-// require_once LC_THEME_DIR . '/inc/lc-careers.php';
+require_once CB_THEME_DIR . '/inc/cb-posttypes.php';
+require_once CB_THEME_DIR . '/inc/cb-taxonomies.php';
+require_once CB_THEME_DIR . '/inc/cb-utility.php';
+require_once CB_THEME_DIR . '/inc/cb-blocks.php';
+require_once CB_THEME_DIR . '/inc/cb-news.php';
+// require_once CB_THEME_DIR . '/inc/cb-careers.php';
 
 
 // Remove unwanted SVG filter injection WP
@@ -54,25 +54,26 @@ if (function_exists('acf_add_options_page')) {
 
 function widgets_init()
 {
-    register_nav_menus(array(
-        'primary_nav' => __('Primary Nav', 'lc-tideywebb'),
-    ));
-    // register_nav_menus(array(
-    //     'top_nav' => __('Top Nav', 'lc-tideywebb'),
-    // ));
+    register_sidebar(
+        array(
+            'name'          => __('Footer Col 1', 'cb-gaffsy'),
+            'id'            => 'footer-1',
+            'description'   => __('Footer Col 1', 'cb-gaffsy'),
+            'before_widget' => '<div id="%1$s" class="footer-widget %2$s">',
+            'after_widget'  => '</div>',
+        )
+    );
 
     register_nav_menus(array(
-        'footer_menu1' => __('Footer Menu 1', 'lc-tideywebb'),
+        'primary_nav' => __('Primary Nav', 'cb-gaffsy'),
     ));
-    // register_nav_menus(array(
-    //     'footer_menu2' => __('Footer Menu 2', 'lc-tideywebb'),
-    // ));
-    // register_nav_menus(array(
-    //     'footer_menu3' => __('Footer Menu 3', 'lc-tideywebb'),
-    // ));
-    // register_nav_menus(array(
-    //     'footer_menu4' => __('Footer Menu 4', 'lc-tideywebb'),
-    // ));
+
+    register_nav_menus(array(
+        'footer_menu1' => __('Footer Menu 1', 'cb-gaffsy'),
+    ));
+    register_nav_menus(array(
+        'footer_menu2' => __('Footer Menu 2', 'cb-gaffsy'),
+    ));
 
     unregister_sidebar('hero');
     unregister_sidebar('herocanvas');
@@ -81,6 +82,38 @@ function widgets_init()
     unregister_sidebar('right-sidebar');
     unregister_sidebar('footerfull');
     unregister_nav_menu('primary');
+
+    add_theme_support('disable-custom-colors');
+    add_theme_support(
+        'editor-color-palette',
+        array(
+            array(
+                'name'  => 'Blue',
+                'slug'  => 'primary',
+                'color' => '#00A0DE',
+            ),
+            array(
+                'name'  => 'Dark Blue',
+                'slug'  => 'dark',
+                'color' => '#00487C',
+            ),
+            array(
+                'name'  => 'Purple',
+                'slug'  => 'darkest',
+                'color' => '#0D0630',
+            ),
+            array(
+                'name'  => 'Green',
+                'slug'  => 'highlight',
+                'color' => '#53DD6C',
+            ),
+            array(
+                'name'  => 'Grey',
+                'slug'  => 'grey',
+                'color' => '#FFF0F0',
+            ),
+        )
+    );
 }
 add_action('widgets_init', 'widgets_init', 11);
 
@@ -89,27 +122,27 @@ remove_action('wp_enqueue_scripts', 'wp_enqueue_global_styles');
 remove_action('wp_body_open', 'wp_global_styles_render_svg_filters');
 
 //Custom Dashboard Widget
-add_action('wp_dashboard_setup', 'register_LC_dashboard_widget');
-function register_LC_dashboard_widget()
+add_action('wp_dashboard_setup', 'register_cb_dashboard_widget');
+function register_cb_dashboard_widget()
 {
     wp_add_dashboard_widget(
-        'lc_dashboard_widget',
-        'Lamcat',
-        'lc_dashboard_widget_display'
+        'cb_dashboard_widget',
+        'Chillibyte',
+        'cb_dashboard_widget_display'
     );
 }
 
-function lc_dashboard_widget_display()
+function cb_dashboard_widget_display()
 {
     ?>
 <div style="display: flex; align-items: center; justify-content: space-around;">
     <img style="width: 50%;"
-        src="<?= get_stylesheet_directory_uri().'/img/lc-full.jpg'; ?>">
+        src="<?= get_stylesheet_directory_uri().'/img/cb-full.jpg'; ?>">
     <a class="button button-primary" target="_blank" rel="noopener nofollow noreferrer"
-        href="mailto:hello@lamcat.co.uk/">Contact</a>
+        href="mailto:hello@www.chillibyte.co.uk/">Contact</a>
 </div>
 <div>
-    <p><strong>Thanks for choosing Lamcat!</strong></p>
+    <p><strong>Thanks for choosing Chillibyte!</strong></p>
     <hr>
     <p>Got a problem with your site, or want to make some changes & need us to take a look for you?</p>
     <p>Use the link above to get in touch and we'll get back to you ASAP.</p>
@@ -187,43 +220,17 @@ function wd_gf_update_submit_button($button_input, $form)
 add_filter('gform_submit_button', 'wd_gf_update_submit_button', 10, 2);
 
 
-
-
-function LC_theme_enqueue()
+function cb_theme_enqueue()
 {
-	// Get the theme data.
-	$the_theme     = wp_get_theme();
-	$theme_version = $the_theme->get( 'Version' );
-
-	$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-	// Grab asset urls.
-	$theme_styles  = "/css/child-theme{$suffix}.css";
-	$theme_scripts = "/js/child-theme{$suffix}.js";
-	
-	$css_version = $theme_version . '.' . filemtime( get_stylesheet_directory() . $theme_styles );
-
+    $the_theme = wp_get_theme();
     // wp_enqueue_style('lightbox-stylesheet', get_stylesheet_directory_uri() . '/css/lightbox.min.css', array(), $the_theme->get('Version'));
     // wp_enqueue_script('lightbox-scripts', get_stylesheet_directory_uri() . '/js/lightbox-plus-jquery.min.js', array(), $the_theme->get('Version'), true);
     // wp_enqueue_script('lightbox-scripts', get_stylesheet_directory_uri() . '/js/lightbox.min.js', array(), $the_theme->get('Version'), true);
-    wp_enqueue_script('jquery', 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js', array(), null, true);
-    wp_enqueue_style('slick-styles', 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css', array(), $the_theme->get('Version'));
-    wp_enqueue_style('slick-theme-styles', 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css', array(), $the_theme->get('Version'));
-    wp_enqueue_script('slick', 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js', array(), null, true);
+    // wp_enqueue_script('jquery', 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js', array(), null, true);
     // wp_enqueue_style('aos-style', "https://unpkg.com/aos@2.3.1/dist/aos.css", array());
     // wp_enqueue_script('aos', 'https://unpkg.com/aos@2.3.1/dist/aos.js', array(), null, true);
-    wp_enqueue_script('parallax', get_stylesheet_directory_uri() . '/js/parallax.min.js', array('jquery'), $the_theme->get('Version'), true);
-	wp_enqueue_script( 'child-understrap-scripts', get_stylesheet_directory_uri() . $theme_scripts, array('jquery'), $js_version, true );
-
-	wp_enqueue_style( 'child-understrap-styles', get_stylesheet_directory_uri() . $theme_styles, array(), $css_version );
-	// wp_enqueue_script( 'jquery' );
-	
-	$js_version = $theme_version . '.' . filemtime( get_stylesheet_directory() . $theme_scripts );
-	
-	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
-		wp_enqueue_script( 'comment-reply' );
-	}
 }
-add_action('wp_enqueue_scripts', 'LC_theme_enqueue');
+add_action('wp_enqueue_scripts', 'cb_theme_enqueue');
 
 
 // black thumbnails - fix alpha channel
@@ -269,90 +276,4 @@ add_action('wp_enqueue_scripts', 'LC_theme_enqueue');
 //     array_unshift($editors, ExtendedWpImageEditorImagick::class);
 
 //     return $editors;
-// });
-
-
-function testimonials_slider($bg) {
-    ob_start();
-
-    $q = new WP_Query(array(
-        'post_type' => 'testimonials',
-        'post_status' => 'publish',
-        'posts_per_page' => 5,
-    ));
-
-    if ($q->have_posts()) {
-        echo '<div class="testimonials_slider">';
-        while ($q->have_posts()) {
-            $q->the_post();
-            global $post;
-            $slug = $post->post_name;
-            $text = $bg == 'bg--green-400' ? 'text-white' : '';
-            $cite = $bg == 'bg--green-400' ? 'text-gold-400' : '';
-            ?>
-            <div class="mx-4">
-                <div class="testimonial">
-                    <a href="/testimonials/#<?=$slug?>">
-                        <div class="testimonial__content pb-3 <?=$text?>"><?=wp_trim_words(get_the_content(), 55)?></div>
-                        <div class="testimonial__title pb-3 <?=$cite?>"><?=get_the_title()?></div>
-                    </a>
-                </div>
-            </div>
-            <?php
-        }
-        echo '</div>';
-    }
-
-    wp_reset_postdata();
-    $ob_str = ob_get_contents();
-    ob_end_clean();
-
-    add_action('wp_footer', function () {
-    ?>
-    <script type="text/javascript">
-    (function($){
-      $('.testimonials_slider').slick({
-        infinite: true,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        autoplay: true,
-        autoplaySpeed: 6000,
-        speed: 1000,
-        arrows: false,
-      });
-    })(jQuery);
-    </script>
-    <?php
-    }, 9999);
-
-    return $ob_str;
-}
-
-
-function lc_post_nav()
-{
-        ?>
-        <div class="d-flex justify-content-between">
-        <?php
-        $prev_post_obj = get_adjacent_post( '', '', true );
-        if ($prev_post_obj) {
-            $prev_post_ID   = isset( $prev_post_obj->ID ) ? $prev_post_obj->ID : '';
-            $prev_post_link     = get_permalink( $prev_post_ID );
-            ?>
-        <a href="<?php echo $prev_post_link; ?>" rel="next" class="btn btn-previous btn-green">Previous</a>
-           <?php
-        }
-
-        $next_post_obj  = get_adjacent_post( '', '', false );
-        if ($next_post_obj) {
-            $next_post_ID   = isset( $next_post_obj->ID ) ? $next_post_obj->ID : '';
-            $next_post_link     = get_permalink( $next_post_ID );
-            ?>
-        <a href="<?php echo $next_post_link; ?>" rel="next" class="btn btn-next btn-green">Next</a>
-           <?php
-        }
-        ?>
-        </div>
-        <?php
-
-}
+// });?>
